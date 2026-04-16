@@ -1,0 +1,34 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../config/app_config.dart';
+
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
+});
+
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: AppConfig.authApiBaseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  );
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final storage = ref.read(secureStorageProvider);
+        final token = await storage.read(key: 'jwt');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer \$token';
+        }
+        return handler.next(options);
+      },
+    ),
+  );
+
+  return dio;
+});
