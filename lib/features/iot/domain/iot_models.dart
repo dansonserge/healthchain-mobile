@@ -4,7 +4,7 @@ part 'iot_models.freezed.dart';
 part 'iot_models.g.dart';
 
 @freezed
-class IOTDevice with _$IOTDevice {
+abstract class IOTDevice with _$IOTDevice {
   const factory IOTDevice({
     required String id,
     @JsonKey(name: 'device_id') required String hardwareId,
@@ -18,7 +18,7 @@ class IOTDevice with _$IOTDevice {
 }
 
 @freezed
-class TelemetryData with _$TelemetryData {
+abstract class TelemetryData with _$TelemetryData {
   const factory TelemetryData({
     required double temperature,
     required DateTime timestamp,
@@ -29,7 +29,7 @@ class TelemetryData with _$TelemetryData {
 }
 
 @freezed
-class NotificationItem with _$NotificationItem {
+abstract class NotificationItem with _$NotificationItem {
   const factory NotificationItem({
     required String id,
     required String title,

@@ -18,9 +18,9 @@ class AuthState {
   });
 
   factory AuthState.initial() => AuthState(
-    isAuthenticated: false,
-    isLoading: true, // Initially loading while we check local storage
-  );
+        isAuthenticated: false,
+        isLoading: true, // Initially loading while we check local storage
+      );
 
   AuthState copyWith({
     bool? isAuthenticated,
@@ -38,7 +38,8 @@ class AuthState {
 }
 
 // Global Notifier
-final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider =
+    NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
 class AuthNotifier extends Notifier<AuthState> {
   Dio get dio => ref.read(dioProvider);
@@ -65,17 +66,18 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      final response = await dio.post('/auth/v1/users/auth/login', data: {
+      final response = await dio.post('/users/auth/login', data: {
         'email': email,
         'password': password,
       });
 
       if (response.statusCode == 200) {
-        final token = response.data['token']; // Assumed backend structure based on auth-service implementation
+        final token = response.data[
+            'token']; // Assumed backend structure based on auth-service implementation
         final user = response.data['user'];
 
         await storage.write(key: 'jwt', value: token);
-        
+
         state = state.copyWith(
           isAuthenticated: true,
           isLoading: false,
@@ -84,17 +86,25 @@ class AuthNotifier extends Notifier<AuthState> {
         return true;
       } else {
         state = state.copyWith(
-          isAuthenticated: false, 
-          isLoading: false, 
+          isAuthenticated: false,
+          isLoading: false,
           errorMessage: 'Invalid credentials. Please try again.',
         );
         return false;
       }
     } on DioException catch (e) {
+      String errorMessage =
+          'Network authentication failed. Check your connection.';
+      if (e.response?.data is Map) {
+        errorMessage = e.response?.data?['error'] ?? errorMessage;
+      } else if (e.response?.statusMessage != null) {
+        errorMessage = e.response!.statusMessage!;
+      }
+
       state = state.copyWith(
         isAuthenticated: false,
         isLoading: false,
-        errorMessage: e.response?.data?['error'] ?? 'Network authentication failed. Check your connection.',
+        errorMessage: errorMessage,
       );
       return false;
     } catch (e) {

@@ -81,7 +81,7 @@ class _DeviceHeader extends StatelessWidget {
               device.status.toUpperCase(),
               style: TextStyle(
                 fontSize: 18, 
-                fontWeight: FontWeight.black, 
+                fontWeight: FontWeight.w900, 
                 color: device.status == 'critical' ? Colors.red : Colors.black
               ),
             ),

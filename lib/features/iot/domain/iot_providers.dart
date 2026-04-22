@@ -13,7 +13,13 @@ final iotDevicesProvider = FutureProvider<List<IOTDevice>>((ref) async {
   return api.getDevices();
 });
 
-final selectedDeviceIdProvider = StateProvider<String?>((ref) => null);
+final selectedDeviceIdProvider = NotifierProvider<SelectedDeviceIdNotifier, String?>(SelectedDeviceIdNotifier.new);
+
+class SelectedDeviceIdNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+  void select(String? id) => state = id;
+}
 
 final telemetryHistoryProvider = FutureProvider.family<List<TelemetryData>, String>((ref, deviceId) async {
   final api = ref.watch(iotApiProvider);
