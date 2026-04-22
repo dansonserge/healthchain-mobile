@@ -7,4 +7,7 @@ class AppConfig {
   // AppWrite Notifications Configuration
   static String get appwriteEndpoint => dotenv.env['APPWRITE_ENDPOINT'] ?? 'https://cloud.appwrite.io/v1';
   static String get appwriteProjectId => dotenv.env['APPWRITE_PROJECT_ID'] ?? '69e09db2001189ea280e';
+
+  // Supply Chain Services (IoT, Inventory)
+  static String get supplyChainApiBaseUrl => dotenv.env['SUPPLY_CHAIN_URL'] ?? 'http://localhost:8083/api/supply-chain/v1';
 }

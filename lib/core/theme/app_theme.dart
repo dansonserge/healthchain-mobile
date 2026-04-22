@@ -16,7 +16,7 @@ final lightTheme = ThemeData(
   ),
   textTheme: GoogleFonts.outfitTextTheme(),
   scaffoldBackgroundColor: AppColors.background,
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.0), // Web --radius is 0.5rem (8px)
       side: const BorderSide(color: AppColors.border, width: 1),

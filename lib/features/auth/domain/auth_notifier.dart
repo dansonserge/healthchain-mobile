@@ -38,19 +38,17 @@ class AuthState {
 }
 
 // Global Notifier
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  return AuthNotifier(
-    dio: ref.watch(dioProvider),
-    storage: ref.watch(secureStorageProvider),
-  );
-});
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
-class AuthNotifier extends StateNotifier<AuthState> {
-  final Dio dio;
-  final FlutterSecureStorage storage;
+class AuthNotifier extends Notifier<AuthState> {
+  Dio get dio => ref.read(dioProvider);
+  FlutterSecureStorage get storage => ref.read(secureStorageProvider);
 
-  AuthNotifier({required this.dio, required this.storage}) : super(AuthState.initial()) {
-    _checkExistingSession();
+  @override
+  AuthState build() {
+    // Check session asynchronously after initialization
+    Future.microtask(() => _checkExistingSession());
+    return AuthState.initial();
   }
 
   Future<void> _checkExistingSession() async {

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -25,7 +24,9 @@ class SyncWorker {
   SyncWorker({required this.db, required this.dio});
 
   void startListening() {
-    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
       if (results.isNotEmpty && results.first != ConnectivityResult.none) {
         // App just regained network access. Trigger queue wipe.
         processQueue();
@@ -47,20 +48,22 @@ class SyncWorker {
       for (final item in pendingItems) {
         if (item.retryCount >= 3) {
           // Temporarily skip permanently failed items until manually resolved by user
-          continue; 
+          continue;
         }
 
         final payload = jsonDecode(item.payload);
-        
+
         try {
           late Response response;
-          
+
           switch (item.mutationType) {
             case 'STOCK_ADJUST':
-              response = await dio.post('/supply-chain/v1/inventory/adjust', data: payload);
+              response = await dio.post('/supply-chain/v1/inventory/adjust',
+                  data: payload);
               break;
             case 'SCAN_RECEIVE':
-              response = await dio.post('/supply-chain/v1/inventory/receive', data: payload);
+              response = await dio.post('/supply-chain/v1/inventory/receive',
+                  data: payload);
               break;
             default:
               throw Exception('Unknown mutation type: \${item.mutationType}');
@@ -69,14 +72,17 @@ class SyncWorker {
           if (response.statusCode == 200 || response.statusCode == 201) {
             await db.markSyncComplete(item.id);
           } else {
-            await db.markSyncFailed(item.id, 'Server returned \${response.statusCode}', item.retryCount);
+            await db.markSyncFailed(item.id,
+                'Server returned \${response.statusCode}', item.retryCount);
           }
         } on DioException catch (e) {
-          if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.unknown) {
+          if (e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.unknown) {
             // Still offline or bad network, bail out and wait for connectivity trigger again
             break;
           }
-          await db.markSyncFailed(item.id, e.message ?? 'Unknown network error', item.retryCount);
+          await db.markSyncFailed(
+              item.id, e.message ?? 'Unknown network error', item.retryCount);
         } catch (e) {
           await db.markSyncFailed(item.id, e.toString(), item.retryCount);
         }
@@ -87,9 +93,10 @@ class SyncWorker {
   }
 
   /// Entry point for the UI to queue an action offline
-  Future<void> enqueueAction({required String type, required Map<String, dynamic> data}) async {
+  Future<void> enqueueAction(
+      {required String type, required Map<String, dynamic> data}) async {
     await db.enqueueMutation(type, jsonEncode(data));
-    
+
     // Automatically attempt execution instantly incase we have internet
     processQueue();
   }

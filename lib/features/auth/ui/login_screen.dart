@@ -9,13 +9,13 @@ class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   FormGroup buildForm() => fb.group({
-    'email': FormControl<String>(
-      validators: [Validators.required, Validators.email],
-    ),
-    'password': FormControl<String>(
-      validators: [Validators.required, Validators.minLength(8)],
-    ),
-  });
+        'email': FormControl<String>(
+          validators: [Validators.required, Validators.email],
+        ),
+        'password': FormControl<String>(
+          validators: [Validators.required, Validators.minLength(8)],
+        ),
+      });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,23 +33,26 @@ class LoginScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Icon(Icons.health_and_safety, size: 64, color: AppColors.primary),
+                    const Icon(Icons.health_and_safety,
+                        size: 64, color: AppColors.primary),
                     const SizedBox(height: 24),
                     Text(
                       'Welcome to HealthChain',
-                      style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 28),
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayLarge
+                          ?.copyWith(fontSize: 28),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Sign in to access clinical and supply networks',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.mutedForeground,
-                      ),
+                            color: AppColors.mutedForeground,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 48),
-
                     if (authState.errorMessage != null)
                       Container(
                         padding: const EdgeInsets.all(12),
@@ -57,14 +60,14 @@ class LoginScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: AppColors.destructive.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.destructive.withOpacity(0.3)),
+                          border: Border.all(
+                              color: AppColors.destructive.withOpacity(0.3)),
                         ),
                         child: Text(
                           authState.errorMessage!,
-                          style: TextStyle(color: AppColors.destructive),
+                          style: const TextStyle(color: AppColors.destructive),
                         ),
                       ),
-
                     ReactiveTextField<String>(
                       formControlName: 'email',
                       keyboardType: TextInputType.emailAddress,
@@ -74,8 +77,10 @@ class LoginScreen extends ConsumerWidget {
                         prefixIcon: Icon(Icons.email_outlined),
                       ),
                       validationMessages: {
-                        ValidationMessage.required: (error) => 'The email must not be empty',
-                        ValidationMessage.email: (error) => 'The email value must be a valid email',
+                        ValidationMessage.required: (error) =>
+                            'The email must not be empty',
+                        ValidationMessage.email: (error) =>
+                            'The email value must be a valid email',
                       },
                     ),
                     const SizedBox(height: 16),
@@ -89,8 +94,10 @@ class LoginScreen extends ConsumerWidget {
                         prefixIcon: Icon(Icons.lock_outline),
                       ),
                       validationMessages: {
-                        ValidationMessage.required: (error) => 'The password must not be empty',
-                        ValidationMessage.minLength: (error) => 'The password must be at least 8 characters long',
+                        ValidationMessage.required: (error) =>
+                            'The password must not be empty',
+                        ValidationMessage.minLength: (error) =>
+                            'The password must be at least 8 characters long',
                       },
                     ),
                     const SizedBox(height: 32),
@@ -104,7 +111,8 @@ class LoginScreen extends ConsumerWidget {
                               width: 24,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : const Text('Sign In to Dashboard'),
@@ -119,12 +127,14 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  void _handleSubmit(FormGroup form, WidgetRef ref, BuildContext context) async {
+  void _handleSubmit(
+      FormGroup form, WidgetRef ref, BuildContext context) async {
     if (form.valid) {
       final email = form.control('email').value as String;
       final password = form.control('password').value as String;
-      
-      final success = await ref.read(authProvider.notifier).login(email, password);
+
+      final success =
+          await ref.read(authProvider.notifier).login(email, password);
       if (success) {
         if (context.mounted) context.go('/home');
       }

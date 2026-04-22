@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/network/api_client.dart';
-
+import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
 
@@ -23,7 +24,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> with WidgetsBindi
   String _latestScannedText = '';
   
   // List of discovered catalog items from the backend based on OCR
-  List<Map<String, dynamic>> _matchedProducts = [];
+  final List<Map<String, dynamic>> _matchedProducts = [];
   Timer? _debounceTimer;
 
   @override
@@ -319,7 +320,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> with WidgetsBindi
                               child: const Icon(Icons.inventory_2, color: AppColors.primary),
                             ),
                             title: Text(product['name'] ?? 'Unknown Item'),
-                            subtitle: Text('SKU: \${product['sku'] ?? 'N/A'}'),
+                            subtitle: Text('SKU: \${product["sku"] ?? "N/A"}'),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete_outline, color: AppColors.destructive),
                               onPressed: () {
