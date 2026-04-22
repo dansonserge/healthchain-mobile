@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -55,8 +56,20 @@ class AuthNotifier extends Notifier<AuthState> {
   Future<void> _checkExistingSession() async {
     final token = await storage.read(key: 'jwt');
     if (token != null) {
-      // Decode JWT here or validate against /auth endpoint if needed.
-      state = state.copyWith(isAuthenticated: true, isLoading: false);
+      // Decode user details from local storage
+      Map<String, dynamic>? user;
+      final userStr = await storage.read(key: 'user_details');
+      if (userStr != null) {
+        try {
+          user = jsonDecode(userStr);
+        } catch (_) {}
+      }
+      
+      state = state.copyWith(
+        isAuthenticated: true, 
+        isLoading: false,
+        userDetails: user,
+      );
     } else {
       state = state.copyWith(isAuthenticated: false, isLoading: false);
     }
@@ -77,6 +90,9 @@ class AuthNotifier extends Notifier<AuthState> {
         final user = response.data['user'];
 
         await storage.write(key: 'jwt', value: token);
+        if (user != null) {
+          await storage.write(key: 'user_details', value: jsonEncode(user));
+        }
 
         state = state.copyWith(
           isAuthenticated: true,
@@ -106,19 +122,20 @@ class AuthNotifier extends Notifier<AuthState> {
         isLoading: false,
         errorMessage: errorMessage,
       );
-      return false;
-    } catch (e) {
-      state = state.copyWith(
-        isAuthenticated: false,
-        isLoading: false,
-        errorMessage: 'An unexpected error occurred.',
-      );
-      return false;
-    }
+        return false;
+      } catch (e) {
+        state = state.copyWith(
+          isAuthenticated: false,
+          isLoading: false,
+          errorMessage: 'An unexpected error occurred.',
+        );
+        return false;
+      }
   }
 
   Future<void> logout() async {
     await storage.delete(key: 'jwt');
+    await storage.delete(key: 'user_details');
     state = state.copyWith(isAuthenticated: false, userDetails: null);
   }
 }

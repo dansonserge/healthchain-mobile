@@ -2,39 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Dummy screens to unblock routing
 import '../../features/auth/ui/login_screen.dart';
 import '../../features/scanner/ui/scanner_screen.dart';
 import '../../features/iot/ui/iot_monitor_screen.dart';
 import '../../features/iot/ui/iot_detail_screen.dart';
 import '../../features/iot/domain/iot_models.dart';
+import '../../features/auth/domain/auth_notifier.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+import '../../features/home/ui/dashboard_screen.dart';
+import '../../features/inventory/ui/inventory_screen.dart';
+import '../../features/marketplace/ui/marketplace_screen.dart';
+import '../../features/marketplace/ui/procurement_screen.dart';
+import '../../features/marketplace/ui/orders_screen.dart';
+
+import '../ui/navigation/main_scaffold.dart';
+
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
+
+class SupplyChainScreenResolver extends ConsumerWidget {
+  const SupplyChainScreenResolver({super.key});
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            child: const Text('IOT SURVEILLANCE'),
-            onPressed: () => context.push('/iot'),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Open Scanner'),
-            onPressed: () => context.push('/scan'),
-          ),
-        ],
-      ),
-    ),
-  );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userDetails = ref.watch(authProvider).userDetails;
+    bool isSupplier = false;
+    if (userDetails != null && userDetails['institution'] != null) {
+      final type = userDetails['institution']['type']?.toString().toLowerCase() ?? '';
+      if (type.contains('supplier')) {
+        isSupplier = true;
+      }
+    }
+    return isSupplier ? const OrdersScreen() : const ProcurementScreen();
+  }
 }
 
 // Global Router Provider
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: '/auth/login',
     routes: [
       GoRoute(
@@ -42,14 +48,56 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
-      ),
-      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: '/scan',
         builder: (context, state) => const ScannerScreen(),
       ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainScaffold(navigationShell: navigationShell);
+        },
+        branches: [
+          // Branch 0: Home / Dashboard
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/home',
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 1: Inventory
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/inventory',
+                builder: (context, state) => const InventoryScreen(),
+              ),
+            ],
+          ),
+          // Branch 2: Marketplace
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/marketplace',
+                builder: (context, state) => const MarketplaceScreen(),
+              ),
+            ],
+          ),
+          // Branch 3: Procurement OR Orders
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/supply-chain',
+                builder: (context, state) => const SupplyChainScreenResolver(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      // Keep IoT outside or nested if needed. We'll leave it at root level for now so it covers the whole screen
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: '/iot',
         builder: (context, state) => const IotMonitorScreen(),
         routes: [
