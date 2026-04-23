@@ -4,20 +4,31 @@ import 'package:go_router/go_router.dart';
 import '../../../features/auth/domain/auth_notifier.dart';
 
 class AppDrawer extends ConsumerWidget {
-  const AppDrawer({super.key});
+  final StatefulNavigationShell navigationShell;
+
+  const AppDrawer({
+    super.key,
+    required this.navigationShell,
+  });
+
+  void _gotoTab(BuildContext context, int index) {
+    Navigator.pop(context); // Close drawer
+    navigationShell.goBranch(index);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final user = authState.userDetails;
     
-    final institution = user?['institution'];
-    final instName = institution?['name'] ?? 'HealthPlus';
-    final instType = institution?['type'] ?? 'Supplier Distributor';
-    final userName = user?['firstName'] != null && user?['lastName'] != null 
-        ? '${user!['firstName']} ${user!['lastName'][0]}' 
+    final instName = user?['institutionName'] ?? 'HealthPlus';
+    final instType = user?['type'] ?? 'Supplier Distributor';
+    final userName = user?['first_name'] != null && user?['last_name'] != null 
+        ? '${user!['first_name']} ${user!['last_name'][0]}' 
         : 'James J';
     final role = user?['role'] ?? 'Admin';
+
+    final currentIndex = navigationShell.currentIndex;
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -29,13 +40,13 @@ class AppDrawer extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
+                   // ... (Institution Header UI)
                   Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
-                      // Ideally network image here if logo exists
                     ),
                     child: const Icon(Icons.business, color: Colors.blueGrey),
                   ),
@@ -65,15 +76,42 @@ class AppDrawer extends ConsumerWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
-                  _buildNavItem(Icons.bar_chart_rounded, 'Dashboard', isSelected: true),
-                  _buildNavItem(Icons.inventory_2_outlined, 'Inventory'),
-                  _buildNavItem(Icons.sensors_rounded, 'IoT Sensors', onTap: () => context.push('/iot')),
+                  _buildNavItem(
+                    Icons.bar_chart_rounded, 
+                    'Dashboard', 
+                    isSelected: currentIndex == 0,
+                    onTap: () => _gotoTab(context, 0),
+                  ),
+                  _buildNavItem(
+                    Icons.inventory_2_outlined, 
+                    'Inventory', 
+                    isSelected: currentIndex == 1,
+                    onTap: () => _gotoTab(context, 1),
+                  ),
+                  _buildNavItem(
+                    Icons.sensors_rounded, 
+                    'IoT Sensors', 
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push('/iot');
+                    },
+                  ),
                   _buildNavItem(Icons.analytics_outlined, 'AI Analytics'),
                   
                   _buildSectionHeader('MARKETPLACE'),
-                  _buildNavItem(Icons.language_rounded, 'Marketplace'),
+                  _buildNavItem(
+                    Icons.language_rounded, 
+                    'Marketplace', 
+                    isSelected: currentIndex == 2,
+                    onTap: () => _gotoTab(context, 2),
+                  ),
                   _buildNavItem(Icons.shopping_cart_outlined, 'Shopping Cart'),
-                  _buildNavItem(Icons.history_rounded, 'Procurement'),
+                  _buildNavItem(
+                    Icons.history_rounded, 
+                    'Supply Chain', 
+                    isSelected: currentIndex == 3,
+                    onTap: () => _gotoTab(context, 3),
+                  ),
                   _buildNavItem(Icons.inventory_outlined, 'Orders'),
                   _buildNavItem(Icons.storefront_outlined, 'My Listings'),
                   
@@ -120,7 +158,13 @@ class AppDrawer extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
+                    IconButton(
+                      icon: const Icon(Icons.logout_rounded, color: Colors.black54, size: 20),
+                      onPressed: () {
+                        ref.read(authProvider.notifier).logout();
+                        context.go('/auth/login');
+                      },
+                    ),
                   ],
                 ),
               ),

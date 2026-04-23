@@ -85,8 +85,7 @@ class AuthNotifier extends Notifier<AuthState> {
       });
 
       if (response.statusCode == 200) {
-        final token = response.data[
-            'token']; // Assumed backend structure based on auth-service implementation
+        final token = response.data['access_token']; 
         final user = response.data['user'];
 
         await storage.write(key: 'jwt', value: token);

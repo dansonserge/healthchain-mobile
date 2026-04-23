@@ -10,4 +10,7 @@ class AppConfig {
 
   // Supply Chain Services (IoT, Inventory)
   static String get supplyChainApiBaseUrl => dotenv.env['SUPPLY_CHAIN_URL'] ?? 'http://localhost:8083/api/supply-chain/v1';
+
+  // Marketplace & Commerce Services
+  static String get marketplaceApiBaseUrl => dotenv.env['MARKETPLACE_URL'] ?? 'http://localhost:8082/api/marketplace/v1';
 }
