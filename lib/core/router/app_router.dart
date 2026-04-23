@@ -11,7 +11,8 @@ import '../../features/auth/domain/auth_notifier.dart';
 
 import '../../features/home/ui/dashboard_screen.dart';
 import '../../features/inventory/ui/inventory_screen.dart';
-import '../../features/marketplace/ui/marketplace_screen.dart';
+import '../../features/marketplace/ui/screens/marketplace_screen.dart';
+import '../../features/marketplace/ui/screens/product_details_screen.dart';
 import '../../features/marketplace/ui/procurement_screen.dart';
 import '../../features/marketplace/ui/orders_screen.dart';
 
@@ -109,6 +110,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/marketplace/details/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return ProductDetailsScreen(productId: id);
+        },
       ),
     ],
   );

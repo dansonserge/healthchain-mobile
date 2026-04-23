@@ -72,10 +72,25 @@ class MainScaffold extends ConsumerWidget {
         
     final userRole = user?['role'] ?? 'Administrator';
         
-    final profilePic = user?['profile_pic'];
-    final avatarUrl = profilePic != null && profilePic.toString().isNotEmpty 
-        ? '${AppConfig.authApiBaseUrl}/$profilePic' 
-        : null;
+    final profilePic = user?['profile_pic']?.toString() ?? '';
+    
+    String? avatarUrl;
+    if (profilePic.isNotEmpty) {
+      if (profilePic.startsWith('http')) {
+        avatarUrl = profilePic;
+      } else {
+        final baseUrl = AppConfig.authApiBaseUrl;
+        final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+        final cleanPath = profilePic.startsWith('/') ? profilePic.substring(1) : profilePic;
+        
+        if (cleanPath.startsWith('api/auth/v1')) {
+          final domainOnly = cleanBase.split('/api/').first;
+          avatarUrl = '$domainOnly/$cleanPath';
+        } else {
+          avatarUrl = '$cleanBase/$cleanPath';
+        }
+      }
+    }
 
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black87;

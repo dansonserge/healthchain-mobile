@@ -23,7 +23,7 @@ final dioProvider = Provider<Dio>((ref) {
         final storage = ref.read(secureStorageProvider);
         final token = await storage.read(key: 'jwt');
         if (token != null) {
-          options.headers['Authorization'] = 'Bearer \$token';
+          options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
       },
@@ -57,3 +57,29 @@ final supplyChainDioProvider = Provider<Dio>((ref) {
 
   return dio;
 });
+
+final marketplaceDioProvider = Provider<Dio>((ref) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: AppConfig.marketplaceApiBaseUrl,
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+    ),
+  );
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final storage = ref.read(secureStorageProvider);
+        final token = await storage.read(key: 'jwt');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+    ),
+  );
+
+  return dio;
+});
+

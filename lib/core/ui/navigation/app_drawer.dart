@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/config/app_config.dart';
 import '../../../features/auth/domain/auth_notifier.dart';
 
 class AppDrawer extends ConsumerWidget {
@@ -23,10 +24,49 @@ class AppDrawer extends ConsumerWidget {
     
     final instName = user?['institutionName'] ?? 'HealthPlus';
     final instType = user?['type'] ?? 'Supplier Distributor';
+    final instLogo = user?['institutionLogo']?.toString() ?? '';
+    
     final userName = user?['first_name'] != null && user?['last_name'] != null 
         ? '${user!['first_name']} ${user!['last_name'][0]}' 
         : 'James J';
     final role = user?['role'] ?? 'Admin';
+
+    final profilePic = user?['profile_pic']?.toString() ?? '';
+    String? avatarUrl;
+    if (profilePic.isNotEmpty) {
+      if (profilePic.startsWith('http')) {
+        avatarUrl = profilePic;
+      } else {
+        final baseUrl = AppConfig.authApiBaseUrl;
+        final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+        final cleanPath = profilePic.startsWith('/') ? profilePic.substring(1) : profilePic;
+        
+        if (cleanPath.startsWith('api/auth/v1')) {
+          final domainOnly = cleanBase.split('/api/').first;
+          avatarUrl = '$domainOnly/$cleanPath';
+        } else {
+          avatarUrl = '$cleanBase/$cleanPath';
+        }
+      }
+    }
+
+    String? logoUrl;
+    if (instLogo.isNotEmpty) {
+      if (instLogo.startsWith('http')) {
+        logoUrl = instLogo;
+      } else {
+        final baseUrl = AppConfig.authApiBaseUrl;
+        final cleanBase = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+        final cleanPath = instLogo.startsWith('/') ? instLogo.substring(1) : instLogo;
+        
+        if (cleanPath.startsWith('api/auth/v1')) {
+          final domainOnly = cleanBase.split('/api/').first;
+          logoUrl = '$domainOnly/$cleanPath';
+        } else {
+          logoUrl = '$cleanBase/$cleanPath';
+        }
+      }
+    }
 
     final currentIndex = navigationShell.currentIndex;
 
@@ -40,15 +80,23 @@ class AppDrawer extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                   // ... (Institution Header UI)
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 44,
+                    height: 44,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+                      image: logoUrl != null 
+                        ? DecorationImage(
+                            image: NetworkImage(logoUrl),
+                            fit: BoxFit.contain,
+                          ) 
+                        : null,
                     ),
-                    child: const Icon(Icons.business, color: Colors.blueGrey),
+                    child: logoUrl == null 
+                        ? const Icon(Icons.business_rounded, color: Colors.blueGrey, size: 24) 
+                        : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -58,15 +106,16 @@ class AppDrawer extends ConsumerWidget {
                         Text(
                           instName,
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          instType,
-                          style: const TextStyle(fontSize: 12, color: Colors.black54),
+                          instType.replaceAll('_', ' '),
+                          style: const TextStyle(fontSize: 11, color: Colors.black54, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.keyboard_arrow_down, color: Colors.black54),
+                  const Icon(Icons.keyboard_arrow_down, color: Colors.black54, size: 20),
                 ],
               ),
             ),
@@ -140,7 +189,10 @@ class AppDrawer extends ConsumerWidget {
                     CircleAvatar(
                       radius: 16,
                       backgroundColor: Colors.grey[300],
-                      child: const Icon(Icons.person, color: Colors.black54, size: 20),
+                      backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
+                      child: avatarUrl == null 
+                          ? const Icon(Icons.person, color: Colors.black54, size: 20)
+                          : null,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
