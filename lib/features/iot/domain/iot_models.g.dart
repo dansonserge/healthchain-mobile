@@ -7,13 +7,13 @@ part of 'iot_models.dart';
 // **************************************************************************
 
 _IOTDevice _$IOTDeviceFromJson(Map<String, dynamic> json) => _IOTDevice(
-      id: json['id'] as String,
-      hardwareId: json['device_id'] as String,
-      name: json['name'] as String,
-      minTemp: (json['min_temp'] as num).toDouble(),
-      maxTemp: (json['max_temp'] as num).toDouble(),
-      status: json['status'] as String,
-    );
+  id: json['id'] as String,
+  hardwareId: json['device_id'] as String,
+  name: json['name'] as String,
+  minTemp: (json['min_temp'] as num).toDouble(),
+  maxTemp: (json['max_temp'] as num).toDouble(),
+  status: json['status'] as String,
+);
 
 Map<String, dynamic> _$IOTDeviceToJson(_IOTDevice instance) =>
     <String, dynamic>{

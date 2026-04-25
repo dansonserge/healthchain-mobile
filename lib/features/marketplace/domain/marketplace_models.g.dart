@@ -18,7 +18,8 @@ _MarketplaceProduct _$MarketplaceProductFromJson(Map<String, dynamic> json) =>
       distanceKm: (json['distance_km'] as num).toDouble(),
       batchNumber: json['batch_number'] as String?,
       expiryDate: json['expiry_date'] as String?,
-      categories: (json['category_names'] as List<dynamic>?)
+      categories:
+          (json['category_names'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],

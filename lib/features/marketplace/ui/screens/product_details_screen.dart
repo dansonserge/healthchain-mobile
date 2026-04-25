@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:map_launcher/map_launcher.dart' as launcher;
 import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../data/marketplace_repository.dart';
+import '../../data/cart_provider.dart';
 import '../../domain/marketplace_models.dart';
 
 class ProductDetailsScreen extends ConsumerStatefulWidget {
@@ -19,7 +21,6 @@ class ProductDetailsScreen extends ConsumerStatefulWidget {
 class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
   GoogleMapController? _mapController;
   MarketplaceListing? _selectedListing;
-  final Map<String, int> _cart = {}; // ID -> quantity
   final Set<Marker> _markers = {};
 
   final LatLng _initialPosition = const LatLng(-1.9441, 30.0619); // Kigali
@@ -154,16 +155,14 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
           ),
 
           // 3. Floating Cart Summary Bar
-          suppliersAsync.when(
-            data: (listings) {
-              if (_cart.isEmpty) return const SizedBox.shrink();
+          Consumer(
+            builder: (context, ref, child) {
+              final cart = ref.watch(cartProvider);
+              if (cart.isEmpty) return const SizedBox.shrink();
 
-              double total = 0;
-              for (var entry in _cart.entries) {
-                final listing = listings.firstWhere((l) => l.id == entry.key, 
-                  orElse: () => listings.first);
-                total += listing.price * entry.value;
-              }
+              final total = cart.fold(0.0, (sum, item) => sum + (item.listing.price * item.quantity));
+              final itemCount = cart.length;
+              final formattedTotal = NumberFormat('#,###').format(total);
 
               return Positioned(
                 bottom: 24,
@@ -191,11 +190,11 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${_cart.length} ${_cart.length == 1 ? 'Supplier' : 'Suppliers'}',
+                              '$itemCount ${itemCount == 1 ? 'Supplier' : 'Suppliers'}',
                               style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'RWF ${total.toInt()}',
+                              'RWF $formattedTotal',
                               style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: -0.5),
                             ),
                           ],
@@ -228,8 +227,6 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                 ),
               );
             },
-            loading: () => const SizedBox.shrink(),
-            error: (e, s) => const SizedBox.shrink(),
           ),
         ],
       ),
@@ -306,8 +303,10 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
   }
 
   Widget _buildListingRow(MarketplaceListing listing, bool isSelected, bool isDarkMode) {
-    final isInCart = _cart.containsKey(listing.id);
-    final cartQty = _cart[listing.id] ?? 0;
+    final cart = ref.watch(cartProvider);
+    final cartItem = cart.where((item) => item.listing.id == listing.id).firstOrNull;
+    final isInCart = cartItem != null;
+    final cartQty = cartItem?.quantity ?? 0;
 
     return GestureDetector(
       onTap: () => _selectListing(listing),
@@ -377,7 +376,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${listing.currency} ${listing.price.toInt()}',
+                  '${listing.currency} ${NumberFormat('#,###').format(listing.price)}',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 _buildDirectionsButton(listing),
@@ -389,7 +388,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
               _buildAddAction(() => _showQuantityModal(listing))
             else
               _buildRemoveAction(() {
-                setState(() => _cart.remove(listing.id));
+                ref.read(cartProvider.notifier).removeItem(listing.id);
               }),
           ],
         ),
@@ -481,7 +480,8 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
   void _showQuantityModal(MarketplaceListing listing) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     // Set initial quantity from cart if possible
-    final currentQty = _cart[listing.id] ?? 1;
+    final cart = ref.read(cartProvider);
+    final currentQty = cart.where((item) => item.listing.id == listing.id).firstOrNull?.quantity ?? 1;
     _qtyController.text = currentQty.toString();
 
     showModalBottomSheet(
@@ -604,11 +604,11 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                           const Text('ESTIMATED TOTAL', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
                           const SizedBox(height: 8),
                           Text(
-                            '${listing.currency} ${(listing.price * q).toInt()}',
+                            '${listing.currency} ${NumberFormat('#,###').format(listing.price * q)}',
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26, letterSpacing: -1.2),
                           ),
                           const SizedBox(height: 4),
-                          Text('RWF ${listing.price.toInt()} per unit', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                          Text('RWF ${NumberFormat('#,###').format(listing.price)} per unit', style: const TextStyle(fontSize: 10, color: Colors.grey)),
                         ],
                       ),
                     ],
@@ -619,7 +619,7 @@ class _ProductDetailsScreenState extends ConsumerState<ProductDetailsScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         final finalQty = int.tryParse(_qtyController.text) ?? 1;
-                        setState(() => _cart[listing.id] = finalQty);
+                        ref.read(cartProvider.notifier).addOrUpdateItem(listing, finalQty);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

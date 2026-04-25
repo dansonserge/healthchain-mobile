@@ -12,64 +12,103 @@ class $SyncQueueItemsTable extends SyncQueueItems
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _mutationTypeMeta =
-      const VerificationMeta('mutationType');
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _mutationTypeMeta = const VerificationMeta(
+    'mutationType',
+  );
   @override
   late final GeneratedColumn<String> mutationType = GeneratedColumn<String>(
-      'mutation_type', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _payloadMeta =
-      const VerificationMeta('payload');
+    'mutation_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadMeta = const VerificationMeta(
+    'payload',
+  );
   @override
   late final GeneratedColumn<String> payload = GeneratedColumn<String>(
-      'payload', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+    'payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: currentDateAndTime);
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('PENDING'));
-  static const VerificationMeta _retryCountMeta =
-      const VerificationMeta('retryCount');
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('PENDING'),
+  );
+  static const VerificationMeta _retryCountMeta = const VerificationMeta(
+    'retryCount',
+  );
   @override
   late final GeneratedColumn<int> retryCount = GeneratedColumn<int>(
-      'retry_count', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
-  static const VerificationMeta _lastErrorMeta =
-      const VerificationMeta('lastError');
+    'retry_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastErrorMeta = const VerificationMeta(
+    'lastError',
+  );
   @override
   late final GeneratedColumn<String> lastError = GeneratedColumn<String>(
-      'last_error', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'last_error',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, mutationType, payload, createdAt, status, retryCount, lastError];
+  List<GeneratedColumn> get $columns => [
+    id,
+    mutationType,
+    payload,
+    createdAt,
+    status,
+    retryCount,
+    lastError,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'sync_queue_items';
   @override
-  VerificationContext validateIntegrity(Insertable<SyncQueueItem> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<SyncQueueItem> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -77,35 +116,46 @@ class $SyncQueueItemsTable extends SyncQueueItems
     }
     if (data.containsKey('mutation_type')) {
       context.handle(
+        _mutationTypeMeta,
+        mutationType.isAcceptableOrUnknown(
+          data['mutation_type']!,
           _mutationTypeMeta,
-          mutationType.isAcceptableOrUnknown(
-              data['mutation_type']!, _mutationTypeMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_mutationTypeMeta);
     }
     if (data.containsKey('payload')) {
-      context.handle(_payloadMeta,
-          payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta));
+      context.handle(
+        _payloadMeta,
+        payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta),
+      );
     } else if (isInserting) {
       context.missing(_payloadMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     }
     if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
     }
     if (data.containsKey('retry_count')) {
       context.handle(
-          _retryCountMeta,
-          retryCount.isAcceptableOrUnknown(
-              data['retry_count']!, _retryCountMeta));
+        _retryCountMeta,
+        retryCount.isAcceptableOrUnknown(data['retry_count']!, _retryCountMeta),
+      );
     }
     if (data.containsKey('last_error')) {
-      context.handle(_lastErrorMeta,
-          lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta));
+      context.handle(
+        _lastErrorMeta,
+        lastError.isAcceptableOrUnknown(data['last_error']!, _lastErrorMeta),
+      );
     }
     return context;
   }
@@ -116,20 +166,34 @@ class $SyncQueueItemsTable extends SyncQueueItems
   SyncQueueItem map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SyncQueueItem(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      mutationType: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}mutation_type'])!,
-      payload: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}payload'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
-      retryCount: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}retry_count'])!,
-      lastError: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}last_error']),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      mutationType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}mutation_type'],
+      )!,
+      payload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      retryCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}retry_count'],
+      )!,
+      lastError: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_error'],
+      ),
     );
   }
 
@@ -157,14 +221,15 @@ class SyncQueueItem extends DataClass implements Insertable<SyncQueueItem> {
 
   /// Used if the failure is permanent to show to the user
   final String? lastError;
-  const SyncQueueItem(
-      {required this.id,
-      required this.mutationType,
-      required this.payload,
-      required this.createdAt,
-      required this.status,
-      required this.retryCount,
-      this.lastError});
+  const SyncQueueItem({
+    required this.id,
+    required this.mutationType,
+    required this.payload,
+    required this.createdAt,
+    required this.status,
+    required this.retryCount,
+    this.lastError,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -194,8 +259,10 @@ class SyncQueueItem extends DataClass implements Insertable<SyncQueueItem> {
     );
   }
 
-  factory SyncQueueItem.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory SyncQueueItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SyncQueueItem(
       id: serializer.fromJson<int>(json['id']),
@@ -221,23 +288,23 @@ class SyncQueueItem extends DataClass implements Insertable<SyncQueueItem> {
     };
   }
 
-  SyncQueueItem copyWith(
-          {int? id,
-          String? mutationType,
-          String? payload,
-          DateTime? createdAt,
-          String? status,
-          int? retryCount,
-          Value<String?> lastError = const Value.absent()}) =>
-      SyncQueueItem(
-        id: id ?? this.id,
-        mutationType: mutationType ?? this.mutationType,
-        payload: payload ?? this.payload,
-        createdAt: createdAt ?? this.createdAt,
-        status: status ?? this.status,
-        retryCount: retryCount ?? this.retryCount,
-        lastError: lastError.present ? lastError.value : this.lastError,
-      );
+  SyncQueueItem copyWith({
+    int? id,
+    String? mutationType,
+    String? payload,
+    DateTime? createdAt,
+    String? status,
+    int? retryCount,
+    Value<String?> lastError = const Value.absent(),
+  }) => SyncQueueItem(
+    id: id ?? this.id,
+    mutationType: mutationType ?? this.mutationType,
+    payload: payload ?? this.payload,
+    createdAt: createdAt ?? this.createdAt,
+    status: status ?? this.status,
+    retryCount: retryCount ?? this.retryCount,
+    lastError: lastError.present ? lastError.value : this.lastError,
+  );
   SyncQueueItem copyWithCompanion(SyncQueueItemsCompanion data) {
     return SyncQueueItem(
       id: data.id.present ? data.id.value : this.id,
@@ -247,8 +314,9 @@ class SyncQueueItem extends DataClass implements Insertable<SyncQueueItem> {
       payload: data.payload.present ? data.payload.value : this.payload,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       status: data.status.present ? data.status.value : this.status,
-      retryCount:
-          data.retryCount.present ? data.retryCount.value : this.retryCount,
+      retryCount: data.retryCount.present
+          ? data.retryCount.value
+          : this.retryCount,
       lastError: data.lastError.present ? data.lastError.value : this.lastError,
     );
   }
@@ -269,7 +337,14 @@ class SyncQueueItem extends DataClass implements Insertable<SyncQueueItem> {
 
   @override
   int get hashCode => Object.hash(
-      id, mutationType, payload, createdAt, status, retryCount, lastError);
+    id,
+    mutationType,
+    payload,
+    createdAt,
+    status,
+    retryCount,
+    lastError,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -308,8 +383,8 @@ class SyncQueueItemsCompanion extends UpdateCompanion<SyncQueueItem> {
     this.status = const Value.absent(),
     this.retryCount = const Value.absent(),
     this.lastError = const Value.absent(),
-  })  : mutationType = Value(mutationType),
-        payload = Value(payload);
+  }) : mutationType = Value(mutationType),
+       payload = Value(payload);
   static Insertable<SyncQueueItem> custom({
     Expression<int>? id,
     Expression<String>? mutationType,
@@ -330,14 +405,15 @@ class SyncQueueItemsCompanion extends UpdateCompanion<SyncQueueItem> {
     });
   }
 
-  SyncQueueItemsCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? mutationType,
-      Value<String>? payload,
-      Value<DateTime>? createdAt,
-      Value<String>? status,
-      Value<int>? retryCount,
-      Value<String?>? lastError}) {
+  SyncQueueItemsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? mutationType,
+    Value<String>? payload,
+    Value<DateTime>? createdAt,
+    Value<String>? status,
+    Value<int>? retryCount,
+    Value<String?>? lastError,
+  }) {
     return SyncQueueItemsCompanion(
       id: id ?? this.id,
       mutationType: mutationType ?? this.mutationType,
@@ -400,45 +476,84 @@ class $CachedInventoryItemsTable extends CachedInventoryItems
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _skuMeta = const VerificationMeta('sku');
   @override
   late final GeneratedColumn<String> sku = GeneratedColumn<String>(
-      'sku', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _quantityMeta =
-      const VerificationMeta('quantity');
+    'sku',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _quantityMeta = const VerificationMeta(
+    'quantity',
+  );
   @override
   late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
-      'quantity', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _categoryMeta =
-      const VerificationMeta('category');
+    'quantity',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
   @override
   late final GeneratedColumn<String> category = GeneratedColumn<String>(
-      'category', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _locationMeta =
-      const VerificationMeta('location');
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationMeta = const VerificationMeta(
+    'location',
+  );
   @override
   late final GeneratedColumn<String> location = GeneratedColumn<String>(
-      'location', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _lastSyncedAtMeta =
-      const VerificationMeta('lastSyncedAt');
+    'location',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastSyncedAtMeta = const VerificationMeta(
+    'lastSyncedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> lastSyncedAt = GeneratedColumn<DateTime>(
-      'last_synced_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+    'last_synced_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, sku, quantity, category, location, lastSyncedAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    sku,
+    quantity,
+    category,
+    location,
+    lastSyncedAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -446,8 +561,9 @@ class $CachedInventoryItemsTable extends CachedInventoryItems
   static const String $name = 'cached_inventory_items';
   @override
   VerificationContext validateIntegrity(
-      Insertable<CachedInventoryItem> instance,
-      {bool isInserting = false}) {
+    Insertable<CachedInventoryItem> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -457,39 +573,52 @@ class $CachedInventoryItemsTable extends CachedInventoryItems
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('sku')) {
       context.handle(
-          _skuMeta, sku.isAcceptableOrUnknown(data['sku']!, _skuMeta));
+        _skuMeta,
+        sku.isAcceptableOrUnknown(data['sku']!, _skuMeta),
+      );
     } else if (isInserting) {
       context.missing(_skuMeta);
     }
     if (data.containsKey('quantity')) {
-      context.handle(_quantityMeta,
-          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+      context.handle(
+        _quantityMeta,
+        quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta),
+      );
     } else if (isInserting) {
       context.missing(_quantityMeta);
     }
     if (data.containsKey('category')) {
-      context.handle(_categoryMeta,
-          category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
     } else if (isInserting) {
       context.missing(_categoryMeta);
     }
     if (data.containsKey('location')) {
-      context.handle(_locationMeta,
-          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+      context.handle(
+        _locationMeta,
+        location.isAcceptableOrUnknown(data['location']!, _locationMeta),
+      );
     } else if (isInserting) {
       context.missing(_locationMeta);
     }
     if (data.containsKey('last_synced_at')) {
       context.handle(
+        _lastSyncedAtMeta,
+        lastSyncedAt.isAcceptableOrUnknown(
+          data['last_synced_at']!,
           _lastSyncedAtMeta,
-          lastSyncedAt.isAcceptableOrUnknown(
-              data['last_synced_at']!, _lastSyncedAtMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_lastSyncedAtMeta);
     }
@@ -502,20 +631,34 @@ class $CachedInventoryItemsTable extends CachedInventoryItems
   CachedInventoryItem map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return CachedInventoryItem(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      sku: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}sku'])!,
-      quantity: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}quantity'])!,
-      category: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}category'])!,
-      location: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}location'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      sku: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sku'],
+      )!,
+      quantity: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}quantity'],
+      )!,
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      location: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location'],
+      )!,
       lastSyncedAt: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}last_synced_at'])!,
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_synced_at'],
+      )!,
     );
   }
 
@@ -534,14 +677,15 @@ class CachedInventoryItem extends DataClass
   final String category;
   final String location;
   final DateTime lastSyncedAt;
-  const CachedInventoryItem(
-      {required this.id,
-      required this.name,
-      required this.sku,
-      required this.quantity,
-      required this.category,
-      required this.location,
-      required this.lastSyncedAt});
+  const CachedInventoryItem({
+    required this.id,
+    required this.name,
+    required this.sku,
+    required this.quantity,
+    required this.category,
+    required this.location,
+    required this.lastSyncedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -567,8 +711,10 @@ class CachedInventoryItem extends DataClass
     );
   }
 
-  factory CachedInventoryItem.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory CachedInventoryItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CachedInventoryItem(
       id: serializer.fromJson<String>(json['id']),
@@ -594,23 +740,23 @@ class CachedInventoryItem extends DataClass
     };
   }
 
-  CachedInventoryItem copyWith(
-          {String? id,
-          String? name,
-          String? sku,
-          int? quantity,
-          String? category,
-          String? location,
-          DateTime? lastSyncedAt}) =>
-      CachedInventoryItem(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        sku: sku ?? this.sku,
-        quantity: quantity ?? this.quantity,
-        category: category ?? this.category,
-        location: location ?? this.location,
-        lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
-      );
+  CachedInventoryItem copyWith({
+    String? id,
+    String? name,
+    String? sku,
+    int? quantity,
+    String? category,
+    String? location,
+    DateTime? lastSyncedAt,
+  }) => CachedInventoryItem(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    sku: sku ?? this.sku,
+    quantity: quantity ?? this.quantity,
+    category: category ?? this.category,
+    location: location ?? this.location,
+    lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+  );
   CachedInventoryItem copyWithCompanion(CachedInventoryItemsCompanion data) {
     return CachedInventoryItem(
       id: data.id.present ? data.id.value : this.id,
@@ -684,13 +830,13 @@ class CachedInventoryItemsCompanion
     required String location,
     required DateTime lastSyncedAt,
     this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        name = Value(name),
-        sku = Value(sku),
-        quantity = Value(quantity),
-        category = Value(category),
-        location = Value(location),
-        lastSyncedAt = Value(lastSyncedAt);
+  }) : id = Value(id),
+       name = Value(name),
+       sku = Value(sku),
+       quantity = Value(quantity),
+       category = Value(category),
+       location = Value(location),
+       lastSyncedAt = Value(lastSyncedAt);
   static Insertable<CachedInventoryItem> custom({
     Expression<String>? id,
     Expression<String>? name,
@@ -713,15 +859,16 @@ class CachedInventoryItemsCompanion
     });
   }
 
-  CachedInventoryItemsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? name,
-      Value<String>? sku,
-      Value<int>? quantity,
-      Value<String>? category,
-      Value<String>? location,
-      Value<DateTime>? lastSyncedAt,
-      Value<int>? rowid}) {
+  CachedInventoryItemsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? sku,
+    Value<int>? quantity,
+    Value<String>? category,
+    Value<String>? location,
+    Value<DateTime>? lastSyncedAt,
+    Value<int>? rowid,
+  }) {
     return CachedInventoryItemsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -790,30 +937,32 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [syncQueueItems, cachedInventoryItems];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    syncQueueItems,
+    cachedInventoryItems,
+  ];
 }
 
-typedef $$SyncQueueItemsTableCreateCompanionBuilder = SyncQueueItemsCompanion
-    Function({
-  Value<int> id,
-  required String mutationType,
-  required String payload,
-  Value<DateTime> createdAt,
-  Value<String> status,
-  Value<int> retryCount,
-  Value<String?> lastError,
-});
-typedef $$SyncQueueItemsTableUpdateCompanionBuilder = SyncQueueItemsCompanion
-    Function({
-  Value<int> id,
-  Value<String> mutationType,
-  Value<String> payload,
-  Value<DateTime> createdAt,
-  Value<String> status,
-  Value<int> retryCount,
-  Value<String?> lastError,
-});
+typedef $$SyncQueueItemsTableCreateCompanionBuilder =
+    SyncQueueItemsCompanion Function({
+      Value<int> id,
+      required String mutationType,
+      required String payload,
+      Value<DateTime> createdAt,
+      Value<String> status,
+      Value<int> retryCount,
+      Value<String?> lastError,
+    });
+typedef $$SyncQueueItemsTableUpdateCompanionBuilder =
+    SyncQueueItemsCompanion Function({
+      Value<int> id,
+      Value<String> mutationType,
+      Value<String> payload,
+      Value<DateTime> createdAt,
+      Value<String> status,
+      Value<int> retryCount,
+      Value<String?> lastError,
+    });
 
 class $$SyncQueueItemsTableFilterComposer
     extends Composer<_$AppDatabase, $SyncQueueItemsTable> {
@@ -825,25 +974,39 @@ class $$SyncQueueItemsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get mutationType => $composableBuilder(
-      column: $table.mutationType, builder: (column) => ColumnFilters(column));
+    column: $table.mutationType,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get payload => $composableBuilder(
-      column: $table.payload, builder: (column) => ColumnFilters(column));
+    column: $table.payload,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get status => $composableBuilder(
-      column: $table.status, builder: (column) => ColumnFilters(column));
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => ColumnFilters(column));
+    column: $table.retryCount,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get lastError => $composableBuilder(
-      column: $table.lastError, builder: (column) => ColumnFilters(column));
+    column: $table.lastError,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$SyncQueueItemsTableOrderingComposer
@@ -856,26 +1019,39 @@ class $$SyncQueueItemsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get mutationType => $composableBuilder(
-      column: $table.mutationType,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.mutationType,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get payload => $composableBuilder(
-      column: $table.payload, builder: (column) => ColumnOrderings(column));
+    column: $table.payload,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get status => $composableBuilder(
-      column: $table.status, builder: (column) => ColumnOrderings(column));
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => ColumnOrderings(column));
+    column: $table.retryCount,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get lastError => $composableBuilder(
-      column: $table.lastError, builder: (column) => ColumnOrderings(column));
+    column: $table.lastError,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SyncQueueItemsTableAnnotationComposer
@@ -891,7 +1067,9 @@ class $$SyncQueueItemsTableAnnotationComposer
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get mutationType => $composableBuilder(
-      column: $table.mutationType, builder: (column) => column);
+    column: $table.mutationType,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get payload =>
       $composableBuilder(column: $table.payload, builder: (column) => column);
@@ -903,30 +1081,37 @@ class $$SyncQueueItemsTableAnnotationComposer
       $composableBuilder(column: $table.status, builder: (column) => column);
 
   GeneratedColumn<int> get retryCount => $composableBuilder(
-      column: $table.retryCount, builder: (column) => column);
+    column: $table.retryCount,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get lastError =>
       $composableBuilder(column: $table.lastError, builder: (column) => column);
 }
 
-class $$SyncQueueItemsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $SyncQueueItemsTable,
-    SyncQueueItem,
-    $$SyncQueueItemsTableFilterComposer,
-    $$SyncQueueItemsTableOrderingComposer,
-    $$SyncQueueItemsTableAnnotationComposer,
-    $$SyncQueueItemsTableCreateCompanionBuilder,
-    $$SyncQueueItemsTableUpdateCompanionBuilder,
-    (
-      SyncQueueItem,
-      BaseReferences<_$AppDatabase, $SyncQueueItemsTable, SyncQueueItem>
-    ),
-    SyncQueueItem,
-    PrefetchHooks Function()> {
+class $$SyncQueueItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncQueueItemsTable,
+          SyncQueueItem,
+          $$SyncQueueItemsTableFilterComposer,
+          $$SyncQueueItemsTableOrderingComposer,
+          $$SyncQueueItemsTableAnnotationComposer,
+          $$SyncQueueItemsTableCreateCompanionBuilder,
+          $$SyncQueueItemsTableUpdateCompanionBuilder,
+          (
+            SyncQueueItem,
+            BaseReferences<_$AppDatabase, $SyncQueueItemsTable, SyncQueueItem>,
+          ),
+          SyncQueueItem,
+          PrefetchHooks Function()
+        > {
   $$SyncQueueItemsTableTableManager(
-      _$AppDatabase db, $SyncQueueItemsTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $SyncQueueItemsTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -935,86 +1120,89 @@ class $$SyncQueueItemsTableTableManager extends RootTableManager<
               $$SyncQueueItemsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$SyncQueueItemsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> mutationType = const Value.absent(),
-            Value<String> payload = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<String> status = const Value.absent(),
-            Value<int> retryCount = const Value.absent(),
-            Value<String?> lastError = const Value.absent(),
-          }) =>
-              SyncQueueItemsCompanion(
-            id: id,
-            mutationType: mutationType,
-            payload: payload,
-            createdAt: createdAt,
-            status: status,
-            retryCount: retryCount,
-            lastError: lastError,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String mutationType,
-            required String payload,
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<String> status = const Value.absent(),
-            Value<int> retryCount = const Value.absent(),
-            Value<String?> lastError = const Value.absent(),
-          }) =>
-              SyncQueueItemsCompanion.insert(
-            id: id,
-            mutationType: mutationType,
-            payload: payload,
-            createdAt: createdAt,
-            status: status,
-            retryCount: retryCount,
-            lastError: lastError,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> mutationType = const Value.absent(),
+                Value<String> payload = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                Value<String?> lastError = const Value.absent(),
+              }) => SyncQueueItemsCompanion(
+                id: id,
+                mutationType: mutationType,
+                payload: payload,
+                createdAt: createdAt,
+                status: status,
+                retryCount: retryCount,
+                lastError: lastError,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String mutationType,
+                required String payload,
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> retryCount = const Value.absent(),
+                Value<String?> lastError = const Value.absent(),
+              }) => SyncQueueItemsCompanion.insert(
+                id: id,
+                mutationType: mutationType,
+                payload: payload,
+                createdAt: createdAt,
+                status: status,
+                retryCount: retryCount,
+                lastError: lastError,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$SyncQueueItemsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $SyncQueueItemsTable,
-    SyncQueueItem,
-    $$SyncQueueItemsTableFilterComposer,
-    $$SyncQueueItemsTableOrderingComposer,
-    $$SyncQueueItemsTableAnnotationComposer,
-    $$SyncQueueItemsTableCreateCompanionBuilder,
-    $$SyncQueueItemsTableUpdateCompanionBuilder,
-    (
+typedef $$SyncQueueItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncQueueItemsTable,
       SyncQueueItem,
-      BaseReferences<_$AppDatabase, $SyncQueueItemsTable, SyncQueueItem>
-    ),
-    SyncQueueItem,
-    PrefetchHooks Function()>;
-typedef $$CachedInventoryItemsTableCreateCompanionBuilder
-    = CachedInventoryItemsCompanion Function({
-  required String id,
-  required String name,
-  required String sku,
-  required int quantity,
-  required String category,
-  required String location,
-  required DateTime lastSyncedAt,
-  Value<int> rowid,
-});
-typedef $$CachedInventoryItemsTableUpdateCompanionBuilder
-    = CachedInventoryItemsCompanion Function({
-  Value<String> id,
-  Value<String> name,
-  Value<String> sku,
-  Value<int> quantity,
-  Value<String> category,
-  Value<String> location,
-  Value<DateTime> lastSyncedAt,
-  Value<int> rowid,
-});
+      $$SyncQueueItemsTableFilterComposer,
+      $$SyncQueueItemsTableOrderingComposer,
+      $$SyncQueueItemsTableAnnotationComposer,
+      $$SyncQueueItemsTableCreateCompanionBuilder,
+      $$SyncQueueItemsTableUpdateCompanionBuilder,
+      (
+        SyncQueueItem,
+        BaseReferences<_$AppDatabase, $SyncQueueItemsTable, SyncQueueItem>,
+      ),
+      SyncQueueItem,
+      PrefetchHooks Function()
+    >;
+typedef $$CachedInventoryItemsTableCreateCompanionBuilder =
+    CachedInventoryItemsCompanion Function({
+      required String id,
+      required String name,
+      required String sku,
+      required int quantity,
+      required String category,
+      required String location,
+      required DateTime lastSyncedAt,
+      Value<int> rowid,
+    });
+typedef $$CachedInventoryItemsTableUpdateCompanionBuilder =
+    CachedInventoryItemsCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> sku,
+      Value<int> quantity,
+      Value<String> category,
+      Value<String> location,
+      Value<DateTime> lastSyncedAt,
+      Value<int> rowid,
+    });
 
 class $$CachedInventoryItemsTableFilterComposer
     extends Composer<_$AppDatabase, $CachedInventoryItemsTable> {
@@ -1026,25 +1214,39 @@ class $$CachedInventoryItemsTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get sku => $composableBuilder(
-      column: $table.sku, builder: (column) => ColumnFilters(column));
+    column: $table.sku,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get quantity => $composableBuilder(
-      column: $table.quantity, builder: (column) => ColumnFilters(column));
+    column: $table.quantity,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get category => $composableBuilder(
-      column: $table.category, builder: (column) => ColumnFilters(column));
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get location => $composableBuilder(
-      column: $table.location, builder: (column) => ColumnFilters(column));
+    column: $table.location,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get lastSyncedAt => $composableBuilder(
-      column: $table.lastSyncedAt, builder: (column) => ColumnFilters(column));
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$CachedInventoryItemsTableOrderingComposer
@@ -1057,26 +1259,39 @@ class $$CachedInventoryItemsTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get sku => $composableBuilder(
-      column: $table.sku, builder: (column) => ColumnOrderings(column));
+    column: $table.sku,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get quantity => $composableBuilder(
-      column: $table.quantity, builder: (column) => ColumnOrderings(column));
+    column: $table.quantity,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get category => $composableBuilder(
-      column: $table.category, builder: (column) => ColumnOrderings(column));
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get location => $composableBuilder(
-      column: $table.location, builder: (column) => ColumnOrderings(column));
+    column: $table.location,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get lastSyncedAt => $composableBuilder(
-      column: $table.lastSyncedAt,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.lastSyncedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CachedInventoryItemsTableAnnotationComposer
@@ -1107,102 +1322,121 @@ class $$CachedInventoryItemsTableAnnotationComposer
       $composableBuilder(column: $table.location, builder: (column) => column);
 
   GeneratedColumn<DateTime> get lastSyncedAt => $composableBuilder(
-      column: $table.lastSyncedAt, builder: (column) => column);
+    column: $table.lastSyncedAt,
+    builder: (column) => column,
+  );
 }
 
-class $$CachedInventoryItemsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $CachedInventoryItemsTable,
-    CachedInventoryItem,
-    $$CachedInventoryItemsTableFilterComposer,
-    $$CachedInventoryItemsTableOrderingComposer,
-    $$CachedInventoryItemsTableAnnotationComposer,
-    $$CachedInventoryItemsTableCreateCompanionBuilder,
-    $$CachedInventoryItemsTableUpdateCompanionBuilder,
-    (
-      CachedInventoryItem,
-      BaseReferences<_$AppDatabase, $CachedInventoryItemsTable,
-          CachedInventoryItem>
-    ),
-    CachedInventoryItem,
-    PrefetchHooks Function()> {
+class $$CachedInventoryItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CachedInventoryItemsTable,
+          CachedInventoryItem,
+          $$CachedInventoryItemsTableFilterComposer,
+          $$CachedInventoryItemsTableOrderingComposer,
+          $$CachedInventoryItemsTableAnnotationComposer,
+          $$CachedInventoryItemsTableCreateCompanionBuilder,
+          $$CachedInventoryItemsTableUpdateCompanionBuilder,
+          (
+            CachedInventoryItem,
+            BaseReferences<
+              _$AppDatabase,
+              $CachedInventoryItemsTable,
+              CachedInventoryItem
+            >,
+          ),
+          CachedInventoryItem,
+          PrefetchHooks Function()
+        > {
   $$CachedInventoryItemsTableTableManager(
-      _$AppDatabase db, $CachedInventoryItemsTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $CachedInventoryItemsTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
               $$CachedInventoryItemsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
               $$CachedInventoryItemsTableOrderingComposer(
-                  $db: db, $table: table),
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer: () =>
               $$CachedInventoryItemsTableAnnotationComposer(
-                  $db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> sku = const Value.absent(),
-            Value<int> quantity = const Value.absent(),
-            Value<String> category = const Value.absent(),
-            Value<String> location = const Value.absent(),
-            Value<DateTime> lastSyncedAt = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              CachedInventoryItemsCompanion(
-            id: id,
-            name: name,
-            sku: sku,
-            quantity: quantity,
-            category: category,
-            location: location,
-            lastSyncedAt: lastSyncedAt,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String name,
-            required String sku,
-            required int quantity,
-            required String category,
-            required String location,
-            required DateTime lastSyncedAt,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              CachedInventoryItemsCompanion.insert(
-            id: id,
-            name: name,
-            sku: sku,
-            quantity: quantity,
-            category: category,
-            location: location,
-            lastSyncedAt: lastSyncedAt,
-            rowid: rowid,
-          ),
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> sku = const Value.absent(),
+                Value<int> quantity = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<String> location = const Value.absent(),
+                Value<DateTime> lastSyncedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CachedInventoryItemsCompanion(
+                id: id,
+                name: name,
+                sku: sku,
+                quantity: quantity,
+                category: category,
+                location: location,
+                lastSyncedAt: lastSyncedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String sku,
+                required int quantity,
+                required String category,
+                required String location,
+                required DateTime lastSyncedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CachedInventoryItemsCompanion.insert(
+                id: id,
+                name: name,
+                sku: sku,
+                quantity: quantity,
+                category: category,
+                location: location,
+                lastSyncedAt: lastSyncedAt,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$CachedInventoryItemsTableProcessedTableManager
-    = ProcessedTableManager<
-        _$AppDatabase,
-        $CachedInventoryItemsTable,
+typedef $$CachedInventoryItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CachedInventoryItemsTable,
+      CachedInventoryItem,
+      $$CachedInventoryItemsTableFilterComposer,
+      $$CachedInventoryItemsTableOrderingComposer,
+      $$CachedInventoryItemsTableAnnotationComposer,
+      $$CachedInventoryItemsTableCreateCompanionBuilder,
+      $$CachedInventoryItemsTableUpdateCompanionBuilder,
+      (
         CachedInventoryItem,
-        $$CachedInventoryItemsTableFilterComposer,
-        $$CachedInventoryItemsTableOrderingComposer,
-        $$CachedInventoryItemsTableAnnotationComposer,
-        $$CachedInventoryItemsTableCreateCompanionBuilder,
-        $$CachedInventoryItemsTableUpdateCompanionBuilder,
-        (
-          CachedInventoryItem,
-          BaseReferences<_$AppDatabase, $CachedInventoryItemsTable,
-              CachedInventoryItem>
-        ),
-        CachedInventoryItem,
-        PrefetchHooks Function()>;
+        BaseReferences<
+          _$AppDatabase,
+          $CachedInventoryItemsTable,
+          CachedInventoryItem
+        >,
+      ),
+      CachedInventoryItem,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

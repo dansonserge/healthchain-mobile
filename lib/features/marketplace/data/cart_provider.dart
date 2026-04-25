@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/marketplace_models.dart';
 
-class CartNotifier extends StateNotifier<List<ProcurementCartItem>> {
-  CartNotifier() : super([]);
+class CartNotifier extends Notifier<List<ProcurementCartItem>> {
+  @override
+  List<ProcurementCartItem> build() {
+    return [];
+  }
 
   void addOrUpdateItem(MarketplaceListing listing, int quantity) {
     final index = state.indexWhere((item) => item.listing.id == listing.id);
@@ -24,12 +27,10 @@ class CartNotifier extends StateNotifier<List<ProcurementCartItem>> {
   }
 
   double get totalAmount {
-    return state.fold(0, (sum, item) => sum + (item.listing.price * item.quantity));
+    return state.fold(0.0, (sum, item) => sum + (item.listing.price * item.quantity));
   }
 
   int get itemCount => state.length;
 }
 
-final cartProvider = StateNotifierProvider<CartNotifier, List<ProcurementCartItem>>((ref) {
-  return CartNotifier();
-});
+final cartProvider = NotifierProvider<CartNotifier, List<ProcurementCartItem>>(CartNotifier.new);
