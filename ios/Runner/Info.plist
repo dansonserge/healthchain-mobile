@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>HealthChain needs your location to find the nearest pharmacies and medical facilities.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>HealthChain needs your location to provide real-time updates on nearby medical supply chains.</string>
 </dict>
 </plist>

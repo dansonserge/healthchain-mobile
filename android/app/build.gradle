@@ -5,6 +5,20 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def env = [:]
+def dotenvFile = file("../../.env")
+if (dotenvFile.exists()) {
+    dotenvFile.eachLine { line ->
+        def trimmedLine = line.trim()
+        if (trimmedLine && !trimmedLine.startsWith("#")) {
+            def parts = trimmedLine.split("=", 2)
+            if (parts.length == 2) {
+                env[parts[0].trim()] = parts[1].trim()
+            }
+        }
+    }
+}
+
 android {
     namespace = "com.healthchain.healthchain_mobile"
     compileSdk = flutter.compileSdkVersion
@@ -28,6 +42,10 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        manifestPlaceholders += [
+            googleMapsApiKey: env.GOOGLE_MAPS_API_KEY ?: ""
+        ]
     }
 
     buildTypes {

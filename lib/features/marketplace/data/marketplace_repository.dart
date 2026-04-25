@@ -25,8 +25,17 @@ class MarketplaceRepository {
     if (url == null || url.isEmpty) return null;
     if (url.startsWith('http')) return url;
     
-    // The user example shows assets are served from:
-    // [SUPPLY_CHAIN_URL]/catalog/assets/[relative_url]
+    // Check if the URL points to an institution logo or auth-related asset
+    if (url.contains('/api/auth/v1')) {
+      final base = AppConfig.authApiBaseUrl;
+      final cleanBase = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
+      // Extract the path after /api/auth/v1
+      final parts = url.split('/api/auth/v1');
+      final pathAfterVersion = parts.length > 1 ? parts[1] : '';
+      return '$cleanBase$pathAfterVersion';
+    }
+    
+    // Default: Supply chain catalog assets
     final base = AppConfig.supplyChainApiBaseUrl;
     final cleanBase = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
     final cleanUrl = url.startsWith('/') ? url : '/$url';

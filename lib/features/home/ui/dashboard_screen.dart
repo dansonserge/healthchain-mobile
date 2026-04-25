@@ -7,6 +7,7 @@ import 'widgets/activity_heatmap.dart';
 import 'widgets/kpi_card.dart';
 import 'widgets/recent_activity_feed.dart';
 
+
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
@@ -100,6 +101,10 @@ class DashboardScreen extends ConsumerWidget {
             ),
 
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+
+
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
 
             // Heatmap
             SliverToBoxAdapter(

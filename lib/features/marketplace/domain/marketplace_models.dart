@@ -46,3 +46,11 @@ abstract class MarketplaceListing with _$MarketplaceListing {
   factory MarketplaceListing.fromJson(Map<String, dynamic> json) =>
       _$MarketplaceListingFromJson(json);
 }
+
+@freezed
+abstract class ProcurementCartItem with _$ProcurementCartItem {
+  const factory ProcurementCartItem({
+    required MarketplaceListing listing,
+    required int quantity,
+  }) = _ProcurementCartItem;
+}
