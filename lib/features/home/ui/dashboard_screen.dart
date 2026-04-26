@@ -68,12 +68,13 @@ class DashboardScreen extends ConsumerWidget {
                     childAspectRatio: 2.2,
                   ),
                   delegate: SliverChildListDelegate([
-                    KPICard(
-                      label: 'Total Revenue',
-                      value: currencyFormat.format(metrics.totalRevenue),
-                      icon: Icons.account_balance_wallet_rounded,
-                      iconColor: Colors.teal,
-                    ),
+                    if (!authState.isStaff)
+                      KPICard(
+                        label: 'Total Revenue',
+                        value: currencyFormat.format(metrics.totalRevenue),
+                        icon: Icons.account_balance_wallet_rounded,
+                        iconColor: Colors.teal,
+                      ),
                     KPICard(
                       label: 'Pending Fulfillments',
                       value: '${metrics.pendingFulfillments}',
@@ -87,12 +88,13 @@ class DashboardScreen extends ConsumerWidget {
                       icon: Icons.storefront_rounded,
                       iconColor: Colors.blue,
                     ),
-                    KPICard(
-                      label: 'Pending Settlements',
-                      value: currencyFormat.format(metrics.pendingSettlements),
-                      icon: Icons.payments_rounded,
-                      iconColor: Colors.pink,
-                    ),
+                    if (!authState.isStaff)
+                      KPICard(
+                        label: 'Pending Settlements',
+                        value: currencyFormat.format(metrics.pendingSettlements),
+                        icon: Icons.payments_rounded,
+                        iconColor: Colors.pink,
+                      ),
                   ]),
                 ),
                 loading: () => const SliverToBoxAdapter(child: Center(child: CircularProgressIndicator(color: Colors.black))),

@@ -17,15 +17,7 @@ class BottomNavBar extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final userDetails = authState.userDetails;
     
-    // Determine institution type for the 5th label
-    // Default to 'Procurement', switch to 'Orders' if Supplier
-    bool isSupplier = false;
-    if (userDetails != null) {
-      final type = userDetails['type']?.toString().toLowerCase() ?? '';
-      if (type.contains('supplier')) {
-        isSupplier = true;
-      }
-    }
+    final isSupplier = authState.isSupplier;
 
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF1C1C1E) : Colors.white;

@@ -26,15 +26,8 @@ class SupplyChainScreenResolver extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userDetails = ref.watch(authProvider).userDetails;
-    bool isSupplier = false;
-    if (userDetails != null && userDetails['institution'] != null) {
-      final type = userDetails['institution']['type']?.toString().toLowerCase() ?? '';
-      if (type.contains('supplier')) {
-        isSupplier = true;
-      }
-    }
-    return isSupplier ? const OrdersScreen() : const ProcurementScreen();
+    final authState = ref.watch(authProvider);
+    return authState.isSupplier ? const OrdersScreen() : const ProcurementScreen();
   }
 }
 

@@ -23,6 +23,25 @@ class AuthState {
         isLoading: true, // Initially loading while we check local storage
       );
 
+  bool get isAdmin {
+    final role = userDetails?['role']?.toString();
+    return [
+      'Admin',
+      'SuperAdmin',
+      'SupplierAdmin',
+      'PharmacyAdmin',
+      'HospitalAdmin',
+      'RegulatoryAdmin'
+    ].contains(role);
+  }
+
+  bool get isStaff => userDetails?['role']?.toString() == 'Staff';
+
+  bool get isSupplier {
+    final type = userDetails?['type']?.toString();
+    return ['SUPPLIER', 'SUPPLIER_DISTRIBUTOR'].contains(type);
+  }
+
   AuthState copyWith({
     bool? isAuthenticated,
     bool? isLoading,
