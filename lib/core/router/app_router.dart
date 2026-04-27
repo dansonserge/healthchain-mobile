@@ -15,6 +15,8 @@ import '../../features/marketplace/ui/screens/marketplace_screen.dart';
 import '../../features/marketplace/ui/screens/product_details_screen.dart';
 import '../../features/marketplace/ui/procurement_screen.dart';
 import '../../features/marketplace/ui/orders_screen.dart';
+import '../../features/sales/ui/sales_screen.dart';
+import '../../features/sales/ui/record_sale_screen.dart';
 
 import '../ui/navigation/main_scaffold.dart';
 
@@ -111,6 +113,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           return ProductDetailsScreen(productId: id);
         },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/sales',
+        builder: (context, state) => const SalesScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/sales/record',
+        builder: (context, state) => const RecordSaleScreen(),
       ),
     ],
   );

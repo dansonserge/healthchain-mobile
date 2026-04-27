@@ -160,6 +160,14 @@ class AppDrawer extends ConsumerWidget {
                     isSelected: currentIndex == 1,
                     onTap: () => _gotoTab(context, 1),
                   ),
+                  _buildNavItem(
+                    Icons.receipt_long_rounded,
+                    'Sales Ledger',
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push('/sales');
+                    },
+                  ),
                   if (!authState.isStaff) ...[
                     _buildNavItem(
                       Icons.sensors_rounded,
