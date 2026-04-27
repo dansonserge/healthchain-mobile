@@ -98,7 +98,7 @@ class InventoryItem {
   bool get isExpired => daysToExpiry <= 0;
 }
 
-enum TransactionType { receipt, adjustment, dispatch, retour, pricingUpdate }
+enum TransactionType { receipt, adjustment, dispatch, retour, pricingUpdate, dispense, shipped }
 
 class InventoryTransaction {
   final String id;
@@ -133,6 +133,8 @@ class InventoryTransaction {
       case 'DISPATCH': type = TransactionType.dispatch; break;
       case 'RETURN': type = TransactionType.retour; break;
       case 'PRICING_UPDATE': type = TransactionType.pricingUpdate; break;
+      case 'DISPENSED': type = TransactionType.dispense; break;
+      case 'SHIPPED': type = TransactionType.shipped; break;
       default: type = TransactionType.adjustment;
     }
 
@@ -166,6 +168,8 @@ class InventoryTransaction {
       case TransactionType.dispatch: return 'DISPATCH';
       case TransactionType.retour: return 'RETURN';
       case TransactionType.pricingUpdate: return 'PRICING';
+      case TransactionType.dispense: return 'DISPENSE';
+      case TransactionType.shipped: return 'SHIPPED';
     }
   }
 
@@ -176,6 +180,8 @@ class InventoryTransaction {
       case TransactionType.dispatch: return Colors.pink;
       case TransactionType.retour: return Colors.purple;
       case TransactionType.pricingUpdate: return Colors.pink;
+      case TransactionType.dispense: return Colors.blue;
+      case TransactionType.shipped: return Colors.indigo;
     }
   }
 
@@ -186,6 +192,8 @@ class InventoryTransaction {
       case TransactionType.dispatch: return Icons.trending_down;
       case TransactionType.retour: return Icons.keyboard_return;
       case TransactionType.pricingUpdate: return Icons.attach_money;
+      case TransactionType.dispense: return Icons.medical_services;
+      case TransactionType.shipped: return Icons.local_shipping;
     }
   }
 }

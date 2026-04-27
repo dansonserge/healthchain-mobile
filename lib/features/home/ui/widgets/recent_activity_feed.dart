@@ -127,6 +127,8 @@ class RecentActivityFeed extends StatelessWidget {
       case TransactionType.dispatch: return 'SHIPPED';
       case TransactionType.retour: return 'RETURNED';
       case TransactionType.pricingUpdate: return 'PRICE';
+      case TransactionType.dispense: return 'DISPENSED';
+      case TransactionType.shipped: return 'SHIPPED';
       default: return 'ACTIVITY';
     }
   }
