@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../inventory/data/inventory_repository.dart';
 import '../../inventory/domain/inventory_models.dart';
 import '../data/sales_repository.dart';
+import 'package:intl/intl.dart';
 
 class RecordSaleScreen extends ConsumerStatefulWidget {
   const RecordSaleScreen({super.key});
@@ -122,7 +123,7 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search Field
-            const Text('PRODUCT', style: TextStyle(fontSize: 10, fontWeight: FontWeight.black, letterSpacing: 1.5, color: Colors.black45)),
+            const Text('PRODUCT', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5, color: Colors.black45)),
             const SizedBox(height: 8),
             TextField(
               controller: _searchController,
@@ -170,9 +171,16 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
                     const Icon(Icons.check_circle_rounded, color: Colors.green),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text(
-                        'Using Batch #${_fefoBatch!.batchNumber} (Expires: ${DateFormat("dd/MM/yyyy").format(_fefoBatch!.expirationDate)})',
-                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12),
+                      child: Builder(
+                        builder: (context) {
+                          final batchNo = _fefoBatch!.batchNumber ?? 'N/A';
+                          final expiry = _fefoBatch!.expirationDate;
+                          final expiryStr = expiry != null ? DateFormat("dd/MM/yyyy").format(expiry) : 'N/A';
+                          return Text(
+                            'Using Batch #$batchNo (Expires: $expiryStr)',
+                            style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -188,7 +196,7 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('QUANTITY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.black, color: Colors.black45)),
+                      const Text('QUANTITY', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.black45)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _qtyController,
@@ -204,7 +212,7 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('UNIT PRICE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.black, color: Colors.black45)),
+                      const Text('UNIT PRICE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w900, color: Colors.black45)),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _priceController,
@@ -235,7 +243,7 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
                       Text('Estimated', style: TextStyle(color: Colors.white38, fontSize: 12)),
                     ],
                   ),
-                  Text('RWF ${total.toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.black)),
+                  Text('RWF ${total.toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900)),
                 ],
               ),
             ),
@@ -248,7 +256,7 @@ class _RecordSaleScreenState extends ConsumerState<RecordSaleScreen> {
               child: ElevatedButton(
                 onPressed: _isLoading || _fefoBatch == null ? null : _submitSale,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.black, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('AUTHORIZE SALE', style: TextStyle(fontWeight: FontWeight.black, letterSpacing: 1.5)),
+                child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('AUTHORIZE SALE', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.5)),
               ),
             ),
           ],

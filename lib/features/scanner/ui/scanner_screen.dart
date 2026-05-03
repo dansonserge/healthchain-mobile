@@ -105,12 +105,10 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> with WidgetsBindi
 
   Future<void> _searchCatalog(String query) async {
     try {
-      final dio = ref.read(dioProvider);
+      final dio = ref.read(supplyChainDioProvider);
       // Querying the OCR catalog search endpoint 
-      // Replace with your actual catalog service endpoint path on the backend API gateway
-      final response = await dio.get('/catalog/v1/search', queryParameters: {
+      final response = await dio.get('/catalog/search', queryParameters: {
         'q': query,
-        'limit': 5,
       });
 
       if (response.statusCode == 200) {

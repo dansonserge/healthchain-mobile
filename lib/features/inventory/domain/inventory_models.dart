@@ -96,6 +96,9 @@ class InventoryItem {
 
   bool get isExpiringSoon => daysToExpiry > 0 && daysToExpiry < 90;
   bool get isExpired => daysToExpiry <= 0;
+
+  String get productName => product.name;
+  String get productId => product.id;
 }
 
 enum TransactionType { receipt, adjustment, dispatch, retour, pricingUpdate, dispense, shipped }

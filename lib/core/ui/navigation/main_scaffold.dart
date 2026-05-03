@@ -22,43 +22,8 @@ class MainScaffold extends ConsumerWidget {
     );
   }
 
-  void _showScannerModal(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.all(24),
-          child: Container(
-            width: 320,
-            height: 320,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white24, width: 2),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                const Icon(Icons.qr_code_scanner, color: Colors.white54, size: 80),
-                const Positioned(
-                  bottom: 24,
-                  child: Text('Camera Active', style: TextStyle(color: Colors.white)),
-                ),
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  void _openScanner(BuildContext context) {
+    context.push('/scan');
   }
 
   @override
@@ -171,7 +136,7 @@ class MainScaffold extends ConsumerWidget {
       ),
       extendBody: true, // Needed for floating/glassmorphic bottom nav
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showScannerModal(context),
+        onPressed: () => _openScanner(context),
         backgroundColor: isDarkMode ? Colors.white : Colors.black, // White in dark mode, black in light
         foregroundColor: isDarkMode ? Colors.black : Colors.white,
         shape: const CircleBorder(),
